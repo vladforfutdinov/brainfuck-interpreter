@@ -1,95 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Brainfuck interpreter</title>
-    <script>
-        'use strict';
+  <meta charset="UTF-8">
+  <title>Brainfuck interpreter</title>
+  <script>
+    'use strict';
 
-        function decode(input) {
-            var counter = 0,
-                marker  = 0,
-                arr     = [0],
-                output  = '';
+    function decode(input) {
+      var counter = 0,
+          marker  = 0,
+          arr     = [0],
+          output  = '';
 
-            if (validate()) {
-                while (input[counter]) {
-                    if (input[counter] === '[')
-                        doLoop();
-                    else
-                        doCell();
+      if (validate()) {
+        while (input[counter]) {
+          if (input[counter] === '[')
+            doLoop();
+          else
+            doCell();
 
-                    counter++;
-                }
-            }
+          counter++;
+        }
+      }
 
-            return output;
+      return output;
 
-            function doLoop() {
-                var startCounter = counter,
-                    stop         = false;
+      function doLoop() {
+        var startCounter = counter,
+            stop         = false;
 
-                while (!stop) {
-                    counter++;
+        while (!stop) {
+          counter++;
 
-                    if (input[counter] === '[')
-                        doLoop();
-                    else if (input[counter] === ']') {
-                        if (arr[marker] === 0)
-                            stop = true;
-                        else
-                            counter = startCounter;
-                    }
-                    else
-                        doCell();
-                }
-
-            }
-
-            function doCell() {
-                if (input[counter] === '.')
-                    output += String.fromCharCode(arr[marker]);
-
-                if (input[counter] === '+')
-                    arr[marker]++;
-                if (input[counter] === '-')
-                    arr[marker]--;
-
-                if (input[counter] === '>')
-                    marker++;
-                if (input[counter] === '<')
-                    marker--;
-
-                checkCell();
-            }
-
-            function checkCell() {
-                if (!arr[marker])
-                    arr[marker] = 0;
-            }
-
-            function validate() {
-                if (input.match(/\[/gi).length != input.match(/\]/gi).length || input.match(/[^<>.+\[\]-]/gi))
-                    output = '!wrong brainfuck string';
-
-                return !output;
-            }
+          if (input[counter] === '[')
+            doLoop();
+          else if (input[counter] === ']') {
+            if (arr[marker] === 0)
+              stop = true;
+            else
+              counter = startCounter;
+          }
+          else
+            doCell();
         }
 
-        function doSubmit(e) {
-            e.preventDefault();
+      }
 
-            document.getElementById('decoded').innerHTML = decode(document.forms[0].input.value)
-        }
+      function doCell() {
+        if (input[counter] === '.')
+          output += String.fromCharCode(arr[marker]);
 
-    </script>
+        if (input[counter] === '+')
+          arr[marker]++;
+        if (input[counter] === '-')
+          arr[marker]--;
+
+        if (input[counter] === '>')
+          marker++;
+        if (input[counter] === '<')
+          marker--;
+
+        checkCell();
+      }
+
+      function checkCell() {
+        if (!arr[marker])
+          arr[marker] = 0;
+      }
+
+      function validate() {
+        if (input.match(/\[/gi).length != input.match(/\]/gi).length || input.match(/[^<>.+\[\]-]/gi))
+          output = '!wrong brainfuck string';
+
+        return !output;
+      }
+    }
+
+    function doSubmit(e) {
+      e.preventDefault();
+
+      document.getElementById('decoded').innerHTML = decode(document.forms[0].input.value)
+    }
+
+  </script>
 </head>
 <body>
 <form action="#" onsubmit="doSubmit(event)">
-    <textarea cols="80" rows="10" name="input">++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.</textarea>
-    <p>
-        <button type="submit">Decode</button>
-    </p>
+  <textarea cols="80" rows="10" name="input">++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.</textarea>
+  <p>
+    <button type="submit">Decode</button>
+  </p>
 </form>
 <div id="decoded"></div>
 </body>
